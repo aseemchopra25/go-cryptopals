@@ -33,9 +33,30 @@ func FixedXor(a string, b string) string {
 	a1 := HexToBytes(a)
 	b1 := HexToBytes(b)
 	ret := make([]byte, len(a1))
+	// Just loop over equal and fixed length byte arrays and xor them
 	for i := 0; i < len(a1); i++ {
 		ret[i] = a1[i] ^ b1[i]
 	}
 	return hex.EncodeToString(ret)
 
+}
+
+func SingleByteXorCipher(a string) int {
+	// Strength of encryption is determined by how hard it is extract
+	// the original message without knowing the encryption key
+	// This challenge is around 1 byte [0-255]
+	// Let's just bruteforce it with 0-255
+
+	a1 := HexToBytes(a)
+	dec := make([]byte, len(a1))
+	for j := 0; j < 256; j++ {
+		for i := 0; i < len(a1); i++ {
+			dec[i] = a1[i] ^ byte(j)
+		}
+		if string(dec) == "Cooking MC's like a pound of bacon" {
+			return j
+		}
+
+	}
+	return 0
 }
